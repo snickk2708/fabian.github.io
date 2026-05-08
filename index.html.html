@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmacia - Fabianita Linda</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fdfdfd;
+            --card-bg: #ffffff;
+            --primary: #059669; 
+            --accent: #2563eb; 
+            --text-main: #0f172a;
+            --text-light: #64748b;
+            --border: #f1f5f9;
+            --in-stock: #10b981;
+            --coming-soon: #f59e0b;
+            --out-of-stock: #ef4444;
+            --tasa-fija: 499.00;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0 30px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand h1 { margin: 0; font-size: 2.2rem; font-weight: 800; color: var(--primary); letter-spacing: -1px; }
+
+        .tasa-badge {
+            background: #f8fafc;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: right;
+        }
+        .tasa-badge span { display: block; font-size: 0.7rem; text-transform: uppercase; color: var(--text-light); font-weight: 700; }
+        .tasa-badge strong { font-size: 1.1rem; color: var(--accent); }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
+        }
+
+        .select-wrapper { margin-bottom: 20px; }
+        select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #fcfcfc;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Estilos para las opciones */
+        .opt-soon { text-decoration: line-through; color: var(--coming-soon); }
+        .opt-out { color: var(--out-of-stock); font-style: italic; }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .btn-add {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-add:hover { background: #047857; transform: translateY(-2px); }
+
+        .invoice-table { width: 100%; border-collapse: collapse; }
+        .invoice-table th { text-align: left; padding: 12px; font-size: 0.8rem; color: var(--text-light); text-transform: uppercase; }
+        .invoice-table td { padding: 15px 12px; border-bottom: 1px solid #f8fafc; }
+
+        .item-name { font-weight: 600; font-size: 0.95rem; display: block; }
+        .item-status { font-size: 0.65rem; padding: 2px 8px; border-radius: 5px; font-weight: 700; text-transform: uppercase; }
+        .status-in { background: #dcfce7; color: #166534; }
+        .status-soon { background: #fef9c3; color: #854d0e; text-decoration: line-through; }
+
+        .total-box {
+            background: #1e293b;
+            color: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .total-row:last-child { margin-bottom: 0; padding-top: 10px; border-top: 1px solid #334155; }
+        .total-label { font-size: 0.85rem; color: #94a3b8; }
+        .total-value-bs { font-size: 1.6rem; font-weight: 700; color: #38bdf8; }
+
+        .btn-reset {
+            background: none;
+            border: 1px solid #e2e8f0;
+            color: var(--text-light);
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 850px) { .main-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    <header>
+        <div class="brand">
+            <h1>🌿 Fabianita Linda</h1>
+        </div>
+        <div class="tasa-badge">
+            <span>Tasa fija BCV</span>
+            <strong>499,00 Bs</strong>
+        </div>
+    </header>
+
+    <div class="card">
+        <div class="section-title">NUEVA VENTA</div>
+        
+        <div class="select-wrapper">
+            <label style="display:block; margin-bottom:10px; font-size:0.75rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Lista de Medicamentos</label>
+            <select id="producto">
+                <optgroup label="DISPONIBLES">
+                    <option value="1.50" data-status="in">Paracetamol 500mg - $1.50</option>
+                    <option value="4.75" data-status="in">Omeprazol 20mg - $4.75</option>
+                    <option value="1.00" data-status="in">Vitamina C 500mg - $1.00</option>
+                    <option value="12.00" data-status="in">Insulina Rápida - $12.00</option>
+                    <option value="2.20" data-status="in">Diclofenac Potásico - $2.20</option>
+                    <option value="3.50" data-status="in">Cetirizina 10mg - $3.50</option>
+                    <option value="8.00" data-status="in">Complejo B (Ampollas) - $8.00</option>
+                </optgroup>
+                <optgroup label="POR LLEGAR (PRÓXIMAMENTE)">
+                    <option value="3.00" data-status="soon" class="opt-soon">Losartán Potásico 50mg - $3.00</option>
+                    <option value="5.50" data-status="soon" class="opt-soon">Amoxicilina 875mg - $5.50</option>
+                    <option value="4.20" data-status="soon" class="opt-soon">Atorvastatina 20mg - $4.20</option>
+                </optgroup>
+                <optgroup label="AGOTADOS">
+                    <option value="0" disabled class="opt-out">Ibuprofeno 400mg (AGOTADO)</option>
+                    <option value="0" disabled class="opt-out">Azitromicina 500mg (AGOTADO)</option>
+                    <option value="0" disabled class="opt-out">Alcohol Isopropílico (AGOTADO)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <label style="display:block; margin-bottom:10px; font-size:0.75rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">Cantidad</label>
+        <input type="number" id="cantidad" value="1" min="1">
+
+        <button class="btn-add" onclick="addItem()">Agregar al Carrito</button>
+    </div>
+
+    <div class="card">
+        <div class="section-title">RESUMEN DE CUENTA</div>
+        
+        <table class="invoice-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th style="text-align:center">Cant.</th>
+                    <th style="text-align:right">Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cartBody"></tbody>
+        </table>
+
+        <div class="total-box">
+            <div class="total-row">
+                <span class="total-label">Total en Divisas</span>
+                <span id="resUsd" style="font-weight:600">$0.00</span>
+            </div>
+            <div class="total-row">
+                <span class="total-label">TOTAL BOLÍVARES</span>
+                <span class="total-value-bs" id="resBs">0.00 Bs</span>
+            </div>
+        </div>
+
+        <button class="btn-reset" onclick="resetSale()">Limpiar Factura</button>
+    </div>
+</div>
+
+<script>
+    const TASA = 499.00;
+    let cart = [];
+
+    function addItem() {
+        const select = document.getElementById('producto');
+        const option = select.options[select.selectedIndex];
+        const qty = parseInt(document.getElementById('cantidad').value);
+        
+        if (qty < 1 || isNaN(qty)) return;
+
+        const item = {
+            name: option.text.split('-')[0].trim(),
+            price: parseFloat(select.value),
+            quantity: qty,
+            status: option.getAttribute('data-status')
+        };
+
+        cart.push(item);
+        renderCart();
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        renderCart();
+    }
+
+    function renderCart() {
+        const body = document.getElementById('cartBody');
+        body.innerHTML = '';
+        let totalUsd = 0;
+
+        cart.forEach((item, index) => {
+            const subUsd = item.price * item.quantity;
+            totalUsd += subUsd;
+            
+            const statusLabel = item.status === 'in' ? 'Disponible' : 'Por Llegar';
+            const statusClass = item.status === 'in' ? 'status-in' : 'status-soon';
+
+            body.innerHTML += `
+                <tr>
+                    <td>
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-status ${statusClass}">${statusLabel}</span>
+                    </td>
+                    <td style="text-align:center; font-weight:700">${item.quantity}</td>
+                    <td style="text-align:right; font-weight:700">
+                        $${subUsd.toFixed(2)}
+                    </td>
+                    <td style="text-align:right">
+                        <button onclick="removeItem(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:1.2rem">&times;</button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        document.getElementById('resUsd').innerText = `$${totalUsd.toFixed(2)}`;
+        document.getElementById('resBs').innerText = `${(totalUsd * TASA).toLocaleString('es-VE', {minimumFractionDigits: 2})} Bs`;
+    }
+
+    function resetSale() {
+        cart = [];
+        document.getElementById('cantidad').value = 1;
+        renderCart();
+    }
+</script>
+
+</body>
+</html>
